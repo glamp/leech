@@ -1,0 +1,17 @@
+{
+  "name": "s3shortcake",
+  "version": "0.0.0",
+  "description": "S3/GA based URL shortener.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Greg Lamp <lamp.greg@gmail.com>",
+  "license": "BSD",
+  "dependencies": {
+    "coffee-script": "^1.7.1",
+    "handlebars": "^2.0.0-alpha.4",
+    "mkdirp": "^0.5.0",
+    "shortid": "^2.0.1"
+  }
+}
