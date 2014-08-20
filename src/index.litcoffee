@@ -3,16 +3,19 @@ Pretty simple setup here.
     fs = require 'fs'
     path = require 'path'
     handlebars = require 'handlebars'
+    aws = require('aws-sdk')
     shortid = require 'shortid'
     mkdirp = require 'mkdirp'
     walk = require './walk'
+    s3 = new aws.S3()
 
 Set the name for your domain.
 
     module.exports = (url) ->
       DOMAIN = process.env["DOMAIN"] || "shortcake.com"
+      BUCKET = process.env[BUCKET] || DOMAIN
       # other configs go here...
-      shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZç√"
+      shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
 
 This is our basic HTML template that we'll use for doing the redirect. It's just
 going to send the user to another page as soon as it's loaded. There's no server
@@ -37,7 +40,7 @@ since it's just a static file, but everything will be tracked by GA.
 Data should just be the user's Google Analytics Id and the URL that they want to
 minify.
 
-      data = { url: "http://blog.yhathq.com/", ga_id: "ga-1234" }
+      data = { url: url, ga_id: "ga-1234" }
       html = template(data)
 
 We're going to generate a shortlink for the URL. [`shortid`](https://github.com/dylang/shortid) does a pretty good job at balancing between being short, and also
@@ -51,8 +54,14 @@ This makes it much easier for S3 to distribute the bucket (and greatly improves 
       directory = _id.slice(0, 3)
       mkdirp.sync path.join(__dirname, DOMAIN, directory)
       filename = path.join(__dirname, DOMAIN, directory, _id.slice(3))
-      ## TODO: save to s3 instead
-      fs.writeFileSync filename, html
+      params = {
+          Bucket: BUCKET,
+          Key: path.join(DOMAIN, directory, _id.slice(3)),
+          Body: html
+      }
+      s3.putObject params, (err, data) ->
+          if err
+              console.log err
 
 We'll keep a running record of all links we've shortened and throw it into a basic
 HTML page just to make it easy to do lookups.
@@ -75,5 +84,12 @@ HTML page just to make it easy to do lookups.
         urls = urls.filter (url) ->
           ! /index.html$/.test url
         html = handlebars.compile(source)({ urls: urls })
-        ## TODO: save to s3 instead
-        fs.writeFileSync(path.join(__dirname, DOMAIN, "index.html"), html)
+        params = {
+            Bucket: BUCKET,
+            Key: path.join(DOMAIN, "index.html"),
+            Body: html
+        }
+        s3.putObject params, (err, data) ->
+            if err
+                console.log err
+

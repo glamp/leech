@@ -1,5 +1,4 @@
 Testing things out...
 
     shorten = require './index'
-
-    shorten "foo.com"
+    shorten "http://blog.yhathq.com/"
