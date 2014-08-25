@@ -11,6 +11,7 @@ Setup the connection to s3
     aws.config.region = 'us-east-1'
     s3 = new aws.S3()
 
+--------
 We're going to make `remora` (this module) exportable so that we can use it in
 the app, as a command line tool, and as it's own funciton. It takes 1 argument
 (the url) which makes it easy to plug-n-play in other stuff.
