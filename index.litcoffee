@@ -30,7 +30,16 @@ since it's just a static file, but everything will be tracked by GA.
           <title>{{url}}</title>
           <body>
             <!-- Google Analytics -->
-            <script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', '{{ga_id}}']);_gaq.push(['_setDomainName', 'yhathq.com']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>
+            <script type="text/javascript">
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+              ga('create', '{{ga_id}}', 'auto');
+              ga('send', 'pageview');
+
+            </script>
             <!-- redirect -->
             <script type="text/javascript">
               window.location.replace('{{url}}');
@@ -66,7 +75,7 @@ This makes it much easier for S3 to distribute the bucket (and greatly improves 
           if err
               console.log err
 
-We'll keep a running record of all links we've shortened and throw it into a 
+We'll keep a running record of all links we've shortened and throw it into a
 basic HTML page just to make it easy to do lookups.
 
       source = """
@@ -99,4 +108,3 @@ basic HTML page just to make it easy to do lookups.
             if err
                 console.log "[ERROR]: " + err
         console.error "Visit: https://s3.amazonaws.com/#{BUCKET}/index.html"
-
