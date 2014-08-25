@@ -1,20 +1,24 @@
 Pretty simple setup here.
 
-    fs = require 'fs'
-    path = require 'path'
     handlebars = require 'handlebars'
     aws = require('aws-sdk')
     shortid = require 'shortid'
-    mkdirp = require 'mkdirp'
-    walk = require './walk'
+
+Setup the connection to s3
+
+    aws.config.update {
+        accessKeyId: process.env["AWS_ACCESS_KEY"],
+        secretAccessKey: process.env["AWS_SECRET_KEY"]
+    }
+    aws.config.region = 'us-east-1'
     s3 = new aws.S3()
 
 Set the name for your domain.
 
     module.exports = (url) ->
       DOMAIN = process.env["DOMAIN"] || "shortcake.com"
-      BUCKET = process.env[BUCKET] || DOMAIN
-      # other configs go here...
+      BUCKET = process.env["BUCKET"] || DOMAIN
+      GA_ID = process.env["GA_ID"]
       shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
 
 This is our basic HTML template that we'll use for doing the redirect. It's just
@@ -40,7 +44,7 @@ since it's just a static file, but everything will be tracked by GA.
 Data should just be the user's Google Analytics Id and the URL that they want to
 minify.
 
-      data = { url: url, ga_id: "ga-1234" }
+      data = { url: url, ga_id: GA_ID }
       html = template(data)
 
 We're going to generate a shortlink for the URL. [`shortid`](https://github.com/dylang/shortid) does a pretty good job at balancing between being short, and also
@@ -48,48 +52,51 @@ being unique!
 
       _id = shortid.generate()
 
-We'll break up the s3 bucket by the [first 3 letters in the id](http://docs.aws.amazon.com/AmazonS3/latest/dev/request-rate-perf-considerations.html).
+We could break up the files by the [first 3 letters in the id](http://docs.aws.amazon.com/AmazonS3/latest/dev/request-rate-perf-considerations.html).
 This makes it much easier for S3 to distribute the bucket (and greatly improves performance).
+...but we're not going to do this yet.
 
-      directory = _id.slice(0, 3)
-      mkdirp.sync path.join(__dirname, DOMAIN, directory)
-      filename = path.join(__dirname, DOMAIN, directory, _id.slice(3))
       params = {
           Bucket: BUCKET,
-          Key: path.join(DOMAIN, directory, _id.slice(3)),
+          Key: _id
+          ACL: "public-read",
           Body: html
       }
       s3.putObject params, (err, data) ->
           if err
               console.log err
 
-We'll keep a running record of all links we've shortened and throw it into a basic
-HTML page just to make it easy to do lookups.
+We'll keep a running record of all links we've shortened and throw it into a 
+basic HTML page just to make it easy to do lookups.
 
-      url = path.join(DOMAIN, directory, _id.slice(3))
-      source = "
+      source = """
       <html>
           <title>Shortened Links</title>
           <body>
               <h1>Shortened Links</h1>
               <ul>
-              {{#urls}}
-                  <li><a href='{{ . }}'>{{ . }}</a></li>
-              {{/urls}}
+              {{#objs}}
+                  <li><a href='{{ Key }}'>{{ Key }}</a></li>
+              {{/objs}}
               </ul>
           </body>
       </html>
-      "
-      walk path.join(__dirname, DOMAIN), (err, urls) ->
-        urls = urls.filter (url) ->
-          ! /index.html$/.test url
-        html = handlebars.compile(source)({ urls: urls })
+      """
+      params = { Bucket: BUCKET }
+      s3.listObjects params, (err, objs) ->
+        if err
+            console.log "[ERROR]: could not list objects: " + err
+        objs = objs.Contents.filter (obj) ->
+          ! /index.html$/.test obj.Key
+        html = handlebars.compile(source)({ objects: objs })
         params = {
             Bucket: BUCKET,
-            Key: path.join(DOMAIN, "index.html"),
+            Key: "index.html",
+            ACL: "public-read",
             Body: html
         }
         s3.putObject params, (err, data) ->
             if err
                 console.log err
+        console.error "Visit: https://s3.amazonaws.com/#{BUCKET}/index.html"
 
