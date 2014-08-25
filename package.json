@@ -1,6 +1,6 @@
 {
-  "name": "s3shortcake",
-  "version": "0.0.0",
+  "name": "remora",
+  "version": "0.0.1",
   "description": "S3/GA based URL shortener.",
   "main": "src/index.litcoffee",
   "scripts": {
