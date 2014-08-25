@@ -1,5 +1,3 @@
-Pretty simple setup here.
-
     handlebars = require 'handlebars'
     aws = require 'aws-sdk'
     shortid = require 'shortid'
