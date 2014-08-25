@@ -11,10 +11,12 @@ Setup the connection to s3
     aws.config.region = 'us-east-1'
     s3 = new aws.S3()
 
-Set the name for your domain.
+We're going to make `remora` (this module) exportable so that we can use it in
+the app, as a command line tool, and as it's own funciton. It takes 1 argument
+(the url) which makes it easy to plug-n-play in other stuff.
 
     module.exports = (url) ->
-      DOMAIN = process.env["DOMAIN"] || "shortcake.com"
+      DOMAIN = process.env["DOMAIN"] || "remora.link"
       BUCKET = process.env["BUCKET"] || DOMAIN
       GA_ID = process.env["GA_ID"]
       shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
@@ -55,14 +57,9 @@ minify.
       html = template(data)
 
 We're going to generate a shortlink for the URL. [`shortid`](https://github.com/dylang/shortid) does a pretty good job at balancing between being short, and also
-being unique!
+being unique! We'll take that `_id` and turn it into the key for an S3 object.
 
       _id = shortid.generate()
-
-We could break up the files by the [first 3 letters in the id](http://docs.aws.amazon.com/AmazonS3/latest/dev/request-rate-perf-considerations.html).
-This makes it much easier for S3 to distribute the bucket (and greatly improves performance).
-...but we're not going to do this yet.
-
       params = {
           Bucket: BUCKET,
           Key: _id
@@ -73,8 +70,9 @@ This makes it much easier for S3 to distribute the bucket (and greatly improves 
           if err
               console.log err
 
-We'll keep a running record of all links we've shortened and throw it into a
-basic HTML page just to make it easy to do lookups.
+*The remainder is a nice to have*. We'll keep a running record of all links
+we've shortened and throw it into a basic HTML page just to make it easy to do
+lookups.
 
       source = """
       <html>
