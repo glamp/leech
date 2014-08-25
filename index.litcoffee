@@ -97,6 +97,6 @@ basic HTML page just to make it easy to do lookups.
         }
         s3.putObject params, (err, data) ->
             if err
-                econsole.log "[ERROR]: " + err
+                console.log "[ERROR]: " + err
         console.error "Visit: https://s3.amazonaws.com/#{BUCKET}/index.html"
 
