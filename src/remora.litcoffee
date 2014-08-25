@@ -95,7 +95,7 @@ basic HTML page just to make it easy to do lookups.
             console.log "[ERROR]: could not list objects: " + err
         objs = objs.Contents.filter (obj) ->
           ! /index.html$/.test obj.Key
-        html = handlebars.compile(source)({ objects: objs })
+        html = handlebars.compile(source)({ objs: objs })
         params = {
             Bucket: BUCKET,
             Key: "index.html",
