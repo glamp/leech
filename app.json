@@ -1,6 +1,6 @@
 {
   "name": "Remora",
-  "description": "TODO: Add a short description about Remora",
+  "description": "A server-less, database-less link shortener.",
   "keywords": [
     "small",
     "sharp",
