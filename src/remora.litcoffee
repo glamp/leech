@@ -17,9 +17,11 @@ the app, as a command line tool, and as it's own funciton. It takes 1 argument
 (the url) which makes it easy to plug-n-play in other stuff.
 
     module.exports = (url) ->
+      # maybe these should be args?
       DOMAIN = process.env["DOMAIN"] || "remora.link"
       BUCKET = process.env["BUCKET"] || DOMAIN
       GA_ID = process.env["GA_ID"]
+
       shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
 
 This is our basic HTML template that we'll use for doing the redirect. It's just
