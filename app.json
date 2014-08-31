@@ -2,10 +2,32 @@
   "name": "Remora",
   "description": "A server-less, database-less link shortener.",
   "keywords": [
-    "small",
-    "sharp",
-    "tool"
+    "link shortner",
+    "bitly clone",
+    "serverless",
+    "nodb"
   ],
   "addons": [],
-  "env": {}
+  "env": {
+    "AWS_ACCESS_KEY": {
+      "description": "Your AWS Access Key.",
+      "generator": "secret"
+    },
+    "AWS_SECRET_KEY": {
+      "description": "Your AWS Secret Key.",
+      "generator": "secret"
+    },
+    "DOMAIN": {
+      "descrption": "Your short domain name.",
+      "value": "remora.link"
+    },
+    "BUCKET": {
+      "description": "An S3 bucket to store the redirects.",
+      "value": "remora.bucket"
+    },
+    "GA_ID" {
+      "description": "Google Analytics corresponding to your DOMAIN."
+      "value": "ga-abcd13-1"
+    }
+  }
 }
