@@ -2,10 +2,7 @@
   "name": "remora",
   "version": "0.0.1",
   "description": "S3/GA based URL shortener.",
-  "main": "src/index.litcoffee",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "src/app.litcoffee",
   "author": "Greg Lamp <lamp.greg@gmail.com>",
   "license": "BSD",
   "dependencies": {

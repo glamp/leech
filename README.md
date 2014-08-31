@@ -1,6 +1,6 @@
-# remora
+# remora [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/glamp/remora)
 A server-less, database-less link shortener.
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/glamp/remora)
+
 
 
 
