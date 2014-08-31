@@ -25,8 +25,8 @@
       "description": "An S3 bucket to store the redirects.",
       "value": "remora.bucket"
     },
-    "GA_ID" {
-      "description": "Google Analytics corresponding to your DOMAIN."
+    "GA_ID": {
+      "description": "Google Analytics corresponding to your DOMAIN.",
       "value": "ga-abcd13-1"
     }
   }
