@@ -1,3 +1,4 @@
+    path = require 'path'
     handlebars = require 'handlebars'
     aws = require 'aws-sdk'
     shortid = require 'shortid'
@@ -12,13 +13,13 @@ Setup the connection to s3
     s3 = new aws.S3()
 
 --------
-We're going to make `remora` (this module) exportable so that we can use it in
+We're going to make `leech` (this module) exportable so that we can use it in
 the app, as a command line tool, and as it's own funciton. It takes 1 argument
 (the url) which makes it easy to plug-n-play in other stuff.
 
-    module.exports = (url) ->
+    module.exports = (url, fn) ->
       # maybe these should be args?
-      DOMAIN = process.env["DOMAIN"] || "remora.link"
+      DOMAIN = process.env["DOMAIN"] || "thelee.ch"
       BUCKET = process.env["BUCKET"] || DOMAIN
       GA_ID = process.env["GA_ID"]
 
@@ -32,8 +33,8 @@ since it's just a static file, but everything will be tracked by GA.
       <html>
           <title>{{url}}</title>
           <body>
+          <script>
             <!-- Google Analytics -->
-            <script type="text/javascript">
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
               m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -41,10 +42,7 @@ since it's just a static file, but everything will be tracked by GA.
 
               ga('create', '{{ga_id}}', 'auto');
               ga('send', 'pageview');
-
-            </script>
-            <!-- redirect -->
-            <script type="text/javascript">
+              // redirect
               window.location.replace('{{url}}');
             </script>
           </body>
@@ -67,11 +65,13 @@ being unique! We'll take that `_id` and turn it into the key for an S3 object.
           Bucket: BUCKET,
           Key: _id
           ACL: "public-read",
-          Body: html
+          Body: html,
+          ContentType: "text/html"
       }
       s3.putObject params, (err, data) ->
           if err
               console.log err
+          fn err, path.join(DOMAIN, _id)
 
 *The remainder is a nice to have*. We'll keep a running record of all links
 we've shortened and throw it into a basic HTML page just to make it easy to do
@@ -105,5 +105,4 @@ lookups.
         }
         s3.putObject params, (err, data) ->
             if err
-                console.log "[ERROR]: " + err
-        console.error "Visit: https://s3.amazonaws.com/#{BUCKET}/index.html"
+              console.log "[ERROR]: " + err.toString()

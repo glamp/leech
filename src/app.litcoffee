@@ -8,11 +8,10 @@ Setup dependencies
     http = require "http"
     lessMiddleware = require "less-middleware"
     methodOverride = require "method-override"
-    morgan = require "morgan"
     path = require "path"
+    leech = require "./leech"
 
     app = express()
-
     app.set "port", process.env.PORT || 3000
 
 Set up views
@@ -48,7 +47,20 @@ Body parsing middleware
 Ze routes...
 
     app.get "/", (req, res) ->
-        res.render "index", { title: "Remora" }
+        res.render "index"
+    
+    app.get "/about", (req, res) ->
+        res.render "about"
+
+    app.post "/", (req, res) ->
+        if req.body.url
+            leech req.body.url, (err, url) ->
+                if err
+                    res.render "index", { url: "ERROR" }
+                else
+                    res.render "index", { url: url }
+        else
+            res.json { "error": "No URL Provided" }
 
     http.createServer(app).listen app.get("port"), ->
-      console.log "Express server listening on port " + app.get("port")
+        console.log "Express server listening on port " + app.get("port")

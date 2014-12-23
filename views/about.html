@@ -1,0 +1,53 @@
+<div class="site-wrapper">
+
+  <div class="site-wrapper-inner">
+
+    <div class="cover-container">
+
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand">Leech</h3>
+          <nav>
+            <ul class="nav masthead-nav">
+              <li><a href="/">Home</a></li>
+              <li class="active"><a href="/about">About</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="inner cover">
+        <h1 class="cover-heading">Leech</h1>
+        <p class="lead">Leech is a serverless, databaseless link shortener.</p>
+        <p class="lead">
+            This server (the one running this website) doesn't actually do much 
+            of anything. It just shortens your link and then stores it in S3.
+        </p>
+        <p class="lead">
+            The actually link redirection (i.e. going from http://lee.ch/b26d8sj3
+            to http://espn.go.com/, actually takes place on a static website 
+            which is all stored on S3.
+        </p>
+        <p class="lead">
+            Each time someone clicks on your shortened link, they actually open
+            a page. That page is configured with Google Analytics.
+        </p>
+        <p class="lead">
+            Any and all click data makes its way back to Google Analytics, 
+            which acts as your database. Best of all, it gives you free access 
+            to Google Analytics reports, metrics, and demographics.
+        </p>
+
+      </div>
+
+      <div class="mastfoot">
+        <div class="inner">
+          <p>Greg Lamp</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
