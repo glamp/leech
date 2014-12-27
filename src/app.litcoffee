@@ -52,6 +52,9 @@ Ze routes...
     app.get "/about", (req, res) ->
         res.render "about"
 
+    app.get "/setup", (req, res) ->
+        res.render "setup"
+
     app.post "/", (req, res) ->
         if req.body.url
             leech req.body.url, (err, url) ->
