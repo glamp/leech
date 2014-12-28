@@ -25,7 +25,26 @@
           </p>
           <hr>
         {{else}}
-          <p class="lead">Leech is a serverless, databaseless link shortener.</p>
+            {{#if urls}}
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Short URL</th>
+                      <th>Full URL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#urls}}
+                      <tr>
+                        <td><a href="{{ key }}">{{ key }}</a></td>
+                        <td><a href="{{ url }}">{{ url }}</a></td>
+                      </tr>
+                    {{/urls}}
+                  </tbody>
+                </table>
+            {{else}}
+            <p class="lead">Leech is a serverless, databaseless link shortener.</p>
+            {{/if}}
         {{/if}}
 
         <p class="lead">

@@ -8,6 +8,7 @@
   "author": "Greg Lamp <lamp.greg@gmail.com>",
   "license": "BSD",
   "dependencies": {
+    "async": "^0.9.0",
     "aws-sdk": "^2.0.14",
     "body-parser": "^1.6.5",
     "coffee-script": "^1.7.1",

@@ -1,4 +1,3 @@
-
 Setup dependencies
 
     bodyParser = require "body-parser"
@@ -6,11 +5,21 @@ Setup dependencies
     exphbs = require "express-handlebars"
     fs = require "fs"
     http = require "http"
+    async = require "async"
     lessMiddleware = require "less-middleware"
     methodOverride = require "method-override"
     path = require "path"
+    aws = require "aws-sdk"
     leech = require "./leech"
 
+    DOMAIN = process.env["DOMAIN"]
+    aws.config.update {
+        accessKeyId: process.env["AWS_ACCESS_KEY"],
+        secretAccessKey: process.env["AWS_SECRET_KEY"]
+    }
+    aws.config.region = 'us-east-1'
+
+    s3 = new aws.S3()
     app = express()
     app.set "port", process.env.PORT || 3000
 
@@ -22,7 +31,6 @@ Set up views
       defaultLayout: "main"
       extname: ".html"
     )
-
     #helpers: helpers
     app.enable "view cache"
 
@@ -48,7 +56,27 @@ Ze routes...
 
     app.get "/", (req, res) ->
       res.render "index"
-    
+
+Simple route to look at all the URLs we've shortened.
+
+    app.get "/urls", (req, res) ->
+      params = { Bucket: DOMAIN }
+      s3.listObjects params, (err, objs) ->
+        if err
+            console.log "[ERROR]: could not list objects: " + err
+            return res.redirect "/"
+
+        urls = []
+        async.each objs.Contents, (obj, callback) ->
+            if err
+              console.log "error", data
+            url = { key: "http://#{DOMAIN}/#{obj.Key}", url: data.Metadata.url }
+            if url.url
+              urls.push url
+            callback()
+        , (err) ->
+          res.render "index", { urls: urls }
+
     app.get "/about", (req, res) ->
       res.render "about"
 

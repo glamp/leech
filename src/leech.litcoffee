@@ -85,38 +85,3 @@ increase preformance.
             console.log err
           fn err, path.join(DOMAIN, _id)
 
---------
-*The remainder is a nice to have*. We'll keep a running record of all links
-we've shortened and throw it into a basic HTML page just to make it easy to do
-lookups.
-
-      source = """
-      <html>
-          <title>Shortened Links</title>
-          <body>
-              <h1>Shortened Links</h1>
-              <ul>
-              {{#objs}}
-                  <li><a href='{{ Key }}'>{{ url }}</a></li>
-              {{/objs}}
-              </ul>
-          </body>
-      </html>
-      """
-      params = { Bucket: BUCKET }
-      s3.listObjects params, (err, objs) ->
-        if err
-            console.log "[ERROR]: could not list objects: " + err
-        objs = objs.Contents.filter (obj) ->
-          ! /index.html$/.test obj.Key
-        html = handlebars.compile(source)({ objs: objs })
-        params = {
-            Bucket: BUCKET,
-            ContentType: "text/html",
-            Key: "index.html",
-            ACL: "public-read",
-            Body: html
-        }
-        s3.putObject params, (err, data) ->
-          if err
-            console.log "[ERROR]: " + err.toString()
