@@ -68,6 +68,7 @@ Simple route to look at all the URLs we've shortened.
 
         urls = []
         async.each objs.Contents, (obj, callback) ->
+          s3.headObject { Bucket: DOMAIN, Key: obj.Key }, (err, data) ->
             if err
               console.log "error", data
             url = { key: "http://#{DOMAIN}/#{obj.Key}", url: data.Metadata.url }
@@ -75,7 +76,7 @@ Simple route to look at all the URLs we've shortened.
               urls.push url
             callback()
         , (err) ->
-          res.render "index", { urls: urls }
+          res.render "urls", { urls: urls }
 
     app.get "/about", (req, res) ->
       res.render "about"

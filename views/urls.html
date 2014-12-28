@@ -1,0 +1,45 @@
+<div class="site-wrapper">
+
+  <div class="site-wrapper-inner">
+
+    <div class="cover-container">
+
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand">Leech</h3>
+          <nav>
+            <ul class="nav masthead-nav">
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/setup">Setup</a></li>
+              <li class="active"><a href="/urls">History</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="inner cover">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Short URL</th>
+              <th>Full URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#urls}}
+              <tr>
+                <td><a href="{{ key }}">{{ key }}</a></td>
+                <td><a href="{{ url }}">{{ url }}</a></td>
+              </tr>
+            {{/urls}}
+          </tbody>
+        </table>
+
+      {{>footer}}
+
+    </div>
+
+  </div>
+
+</div>
