@@ -47,23 +47,23 @@ Body parsing middleware
 Ze routes...
 
     app.get "/", (req, res) ->
-        res.render "index"
+      res.render "index"
     
     app.get "/about", (req, res) ->
-        res.render "about"
+      res.render "about"
 
     app.get "/setup", (req, res) ->
-        res.render "setup"
+      res.render "setup"
 
     app.post "/", (req, res) ->
-        if req.body.url
-            leech req.body.url, (err, url) ->
-                if err
-                    res.render "index", { url: "ERROR" }
-                else
-                    res.render "index", { url: url }
-        else
-            res.json { "error": "No URL Provided" }
+      if req.body.url
+        leech req.body.url, (err, url) ->
+          if err
+            res.render "index", { url: "ERROR" }
+          else
+            res.render "index", { url: url }
+      else
+        res.json { "error": "No URL Provided" }
 
     http.createServer(app).listen app.get("port"), ->
         console.log "Express server listening on port " + app.get("port")

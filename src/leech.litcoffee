@@ -20,7 +20,6 @@ the app, as a command line tool, and as it's own funciton. It takes 1 argument
 (the url) which makes it easy to plug-n-play in other stuff.
 
     module.exports = (url, fn) ->
-      # maybe these should be args?
       DOMAIN = process.env["DOMAIN"] || "thelee.ch"
       BUCKET = process.env["BUCKET"] || DOMAIN
       GA_ID = process.env["GA_ID"]

@@ -21,10 +21,6 @@
       "descrption": "Your short domain name.",
       "value": "thelee.ch"
     },
-    "BUCKET": {
-      "description": "An S3 bucket to store the redirects. This should be the same as your DOMAIN.",
-      "value": "thelee.ch"
-    },
     "GA_ID": {
       "description": "Google Analytics corresponding to your DOMAIN.",
       "value": "ga-abcd13-1"
