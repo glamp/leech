@@ -2,7 +2,9 @@
   "name": "remora",
   "version": "0.0.1",
   "description": "S3/GA based URL shortener.",
-  "main": "src/app.litcoffee",
+  "scripts": {
+    "start": "coffee src/app.litcoffee"
+  },
   "author": "Greg Lamp <lamp.greg@gmail.com>",
   "license": "BSD",
   "dependencies": {
