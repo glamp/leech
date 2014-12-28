@@ -11,11 +11,11 @@
   "env": {
     "AWS_ACCESS_KEY": {
       "description": "Your AWS Access Key.",
-      "generator": "ABCD12345678"
+      "value": "ABCD12345678"
     },
     "AWS_SECRET_KEY": {
       "description": "Your AWS Secret Key.",
-      "generator": "AQWEIFOGSDFOW82392/ER9"
+      "value": "AQWEIFOGSDFOW82392/ER9"
     },
     "DOMAIN": {
       "descrption": "Your short domain name.",
