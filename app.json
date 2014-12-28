@@ -18,12 +18,12 @@
       "value": "AQWEIFOGSDFOW82392/ER9"
     },
     "DOMAIN": {
-      "descrption": "Your short domain name.",
+      "descrption": "Your short domain name. This will be different from the domain this app runs on.",
       "value": "thelee.ch"
     },
     "GA_ID": {
       "description": "Google Analytics corresponding to your DOMAIN.",
-      "value": "ga-abcd13-1"
+      "value": "UA-ABCD12-1"
     }
   }
 }
