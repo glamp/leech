@@ -55,11 +55,11 @@ Body parsing middleware
 Ze routes...
 
     app.get "/", (req, res) ->
-      res.render "index"
+      res.render "index", { isHome: true }
 
 Simple route to look at all the URLs we've shortened.
 
-    app.get "/urls", (req, res) ->
+    app.get "/history", (req, res) ->
       params = { Bucket: DOMAIN }
       s3.listObjects params, (err, objs) ->
         if err
@@ -76,23 +76,26 @@ Simple route to look at all the URLs we've shortened.
               urls.push url
             callback()
         , (err) ->
-          res.render "urls", { urls: urls }
+          res.render "urls", { isHistory: true, urls: urls }
 
     app.get "/about", (req, res) ->
-      res.render "about"
+      res.render "about", { isAbout: true }
 
     app.get "/setup", (req, res) ->
-      res.render "setup"
+      res.render "setup", { isSetup: true }
 
     app.post "/", (req, res) ->
       if req.body.url
         leech req.body.url, (err, url) ->
           if err
-            res.render "index", { url: "ERROR" }
+            res.render "index", { isHome: true, url: "ERROR" }
           else
-            res.render "index", { url: url }
+            res.render "index", { isHome: true, url: url }
       else
         res.json { "error": "No URL Provided" }
+
+    app.get "*", (req, res) ->
+      res.render "404"
 
     http.createServer(app).listen app.get("port"), ->
         console.log "Express server listening on port " + app.get("port")
