@@ -5,6 +5,14 @@
     Hashids = require 'hashids'
     hashids = new Hashids(process.env["AWS_ACCESS_KEY"])
 
+
+Grab our environment variables...
+
+    DOMAIN = process.env["DOMAIN"] || "thelee.ch"
+    BUCKET = process.env["BUCKET"] || DOMAIN
+    GA_ID = process.env["GA_ID"]
+    PARTITION = process.env["PARTITION"] || false
+
 Setup the connection to s3
 
     aws.config.update {
@@ -14,18 +22,46 @@ Setup the connection to s3
     aws.config.region = 'us-east-1'
     s3 = new aws.S3()
 
+Make sure the S3 bucket is setup as a website. We'll just do this each time we 
+start the app. This means that it will frequently fail, but it's the simplest
+way to make sure that we've setup the bucket correctly.
+    
+    s3.createBucket { Bucket: DOMAIN }, (err, data) ->
+      if err
+        console.log "[ERROR]: #{err}"
+      else
+        console.log "Bucket was created for your domain. URL is #{data.url}"
+        welcome = """
+
+                                               _     _____ _____ ____ _   _
+                                              | |   | ____| ____/ ___| | | |
+                                              | |   |  _| |  _|| |   | |_| |
+                                              | |___| |___| |__| |___|  _  |
+                                              |_____|_____|_____\____|_| |_|
+       _ _   _           _                                _                         ___                _            _ _
+  __ _(_) |_| |__  _   _| |__   ___ ___  _ __ ___  _ __ _| | __ _ _ __ ___  _ __   / / | ___  ___  ___| |__    __ _(_) |_
+ / _` | | __| '_ \| | | | '_ \ / __/ _ \| '_ ` _ \(_) _` | |/ _` | '_ ` _ \| '_ \ / /| |/ _ \/ _ \/ __| '_ \  / _` | | __|
+| (_| | | |_| | | | |_| | |_) | (_| (_) | | | | | || (_| | | (_| | | | | | | |_) / / | |  __/  __/ (__| | | || (_| | | |_
+ \__, |_|\__|_| |_|\__,_|_.__(_)___\___/|_| |_| |_(_)__, |_|\__,_|_| |_| |_| .__/_/  |_|\___|\___|\___|_| |_(_)__, |_|\__|
+ |___/                                              |___/                  |_|                                |___/
+        """
+        params = {
+          Bucket: BUCKET,
+          Key: "index.html",
+          ACL: "public-read",
+          Body: welcome,
+          ContentType: "text/html"
+        }
+        s3.putObject params, (err, data) ->
+            if err
+              console.log "[ERROR]: #{err}"
+
 --------
 We're going to make `leech` (this module) exportable so that we can use it in
 the app, as a command line tool, and as it's own funciton. It takes 1 argument
 (the url) which makes it easy to plug-n-play in other stuff.
 
     module.exports = (url, fn) ->
-      DOMAIN = process.env["DOMAIN"] || "thelee.ch"
-      BUCKET = process.env["BUCKET"] || DOMAIN
-      GA_ID = process.env["GA_ID"]
-      PARTITION = process.env["PARTITION"] || false
-
-      shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
 
 This is our basic HTML template that we'll use for doing the redirect. It's just
 going to send the user to another page as soon as it's loaded. There's no server
@@ -67,6 +103,7 @@ that you split the key into 2 parts like so: ("abcd123" --> "abc/d123"). S3 will
 automatically partition you keys across more servers and will dramatically 
 increase preformance.
 
+      shortid.characters "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()"
       _id = shortid.generate()
       if PARTITION
         _id = _id.slice(0, 3) + "/" + _id.slice(3)

@@ -4,3 +4,8 @@
 A server-less, database-less link shortener.
 
 [theleech.herokuapp.com]([thelee.ch])
+
+
+## TODO
+- [ ] prebuilt Google Analytics reports
+- [ ] redirect index page on domain to the app

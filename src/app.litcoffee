@@ -76,7 +76,7 @@ Simple route to look at all the URLs we've shortened.
               urls.push url
             callback()
         , (err) ->
-          res.render "urls", { isHistory: true, urls: urls }
+          res.render "history", { isHistory: true, urls: urls }
 
     app.get "/about", (req, res) ->
       res.render "about", { isAbout: true }
