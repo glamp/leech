@@ -9,17 +9,17 @@ Setup dependencies
     lessMiddleware = require "less-middleware"
     methodOverride = require "method-override"
     path = require "path"
-    aws = require "aws-sdk"
+    AWS = require "aws-sdk"
     leech = require "./leech"
 
     DOMAIN = process.env["DOMAIN"]
-    aws.config.update {
+    AWS.config.update {
         accessKeyId: process.env["AWS_ACCESS_KEY"],
         secretAccessKey: process.env["AWS_SECRET_KEY"]
     }
-    aws.config.region = 'us-east-1'
+    AWS.config.region = 'us-east-1'
 
-    s3 = new aws.S3()
+    s3 = new AWS.S3()
     app = express()
     app.set "port", process.env.PORT || 3000
 
