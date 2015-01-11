@@ -3,7 +3,7 @@
 <br>
 A server-less, database-less link shortener.
 
-[theleech.herokuapp.com]([thelee.ch])
+[theleech.herokuapp.com]([https://theleech.herokuapp.com/])
 
 
 ## TODO
