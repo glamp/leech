@@ -1,3 +1,4 @@
+    fs = require 'fs'
     path = require 'path'
     handlebars = require 'handlebars'
     aws = require 'aws-sdk'
@@ -25,21 +26,33 @@ Setup the connection to s3
 Make sure the S3 bucket is setup as a website. We'll just do this each time we 
 start the app. This means that it will frequently fail, but it's the simplest
 way to make sure that we've setup the bucket correctly.
-    
-    s3.createBucket { Bucket: DOMAIN }, (err, data) ->
+
+    s3.createBucket { Bucket: DOMAIN, ACL: "public-read" }, (err, data) ->
       if err
         console.log "[ERROR]: #{err}"
       else
-        console.log "Bucket was created for your domain. URL is #{data.url}"
-        welcome = fs.readFileSync path.join(__dirname, "welcome-leech.txt")
+        welcome = fs.readFileSync path.join(__dirname, "welcome-ascii.txt")
+        welcome = "<pre>#{welcome}</pre>"
         params = {
-          Bucket: BUCKET,
+          Bucket: BUCKET
           Key: "index.html",
           ACL: "public-read",
           Body: welcome,
           ContentType: "text/html"
         }
         s3.putObject params, (err, data) ->
+          if err
+            console.log "[ERROR]: error creating index.html #{err}"
+            return
+          params = {
+            Bucket: BUCKET,
+            WebsiteConfiguration: {
+              IndexDocument: {
+                Suffix: 'index.html'
+              }
+            }
+          }
+          s3.putBucketWebsite params, (err, data) ->
             if err
               console.log "[ERROR]: #{err}"
 
