@@ -1,34 +1,8 @@
-<div class="site-wrapper">
+{{>header}} 
 
-  <div class="site-wrapper-inner">
-
-    <div class="cover-container">
-      
-      {{>header}} 
-
-      <div class="inner cover">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Short URL</th>
-              <th>Full URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#urls}}
-              <tr>
-                <td><a href="{{ key }}">{{ key }}</a></td>
-                <td><a href="{{ url }}">{{ url }}</a></td>
-              </tr>
-            {{/urls}}
-          </tbody>
-        </table>
-      </div>
-
-      {{>footer}}
-
-    </div>
-
-  </div>
-
+<br><br><br><br>
+<div class="inner cover">
+    {{#urls}}
+      <p><a href="{{ key }}">{{ key }} --> {{ url }}</a></p>
+    {{/urls}}
 </div>
