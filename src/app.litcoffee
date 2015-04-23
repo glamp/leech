@@ -90,9 +90,12 @@ Simple route to look at all the URLs we've shortened.
           if err
             res.render "index", { isHome: true, url: "ERROR" }
           else
-            res.render "index", { isHome: true, url: url }
+            if req.query.format=="json"
+              res.json { status: "OK", short_url: url, original_url: req.body.url }
+            else
+              res.render "index", { isHome: true, url: url }
       else
-        res.json { "error": "No URL Provided" }
+        res.json { status: "ERROR", error: "No URL Provided" }
 
     app.get "*", (req, res) ->
       res.render "404"
