@@ -54,22 +54,21 @@
         <script type="text/javascript">
           $(document).ready(function() {
               if ($("#short-link").length) {
-                var client = new ZeroClipboard( document.getElementById("short-link") );
+                var client = new ZeroClipboard( document.getElementById("copy") );
                 client.on("ready", function( readyEvent ) {
                   client.on("aftercopy", function( event ) {
                     $("#short-link").attr("href", $("#short-link").text());
-                  });
-                  $("#short-link").click();
-                  $("#short-link").addClass("copied-url");
-                  setTimeout(function() {
-                    $("#short-link").removeClass("copied-url");
+                    $("#short-link").addClass("copied-url");
                     setTimeout(function() {
-                      $("#short-link").addClass("copied-url");
+                      $("#short-link").removeClass("copied-url");
                       setTimeout(function() {
-                        $("#short-link").removeClass("copied-url");
+                        $("#short-link").addClass("copied-url");
+                        setTimeout(function() {
+                          $("#short-link").removeClass("copied-url");
+                        }, 100);
                       }, 100);
                     }, 100);
-                  }, 100);
+                  });
                 });
               }
             });
