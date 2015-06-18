@@ -10,7 +10,7 @@
         <!-- if we just shortened a URL -->
         {{#if url}}
           <p class="lead">
-            <h1><a href="http://{{ url }}">{{ url }}</a></h1>
+            <h1><a id="short-link" data-clipboard-text="http://{{ url }}" href="#">{{ url }}</a></h1>
           </p>
           <hr>
         {{else}}
@@ -54,3 +54,4 @@
   </div>
 
 </div>
+
